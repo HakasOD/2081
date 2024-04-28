@@ -86,6 +86,65 @@ public class DashboardActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        // Open navigation drawer
+        if(actionBarDrawerToggle.onOptionsItemSelected(item))
+        {
+            return true;
+        }
+        else if (item.getItemId() == R.id.option_refresh) {
+            // Reload category list
+            FragmentListCategory fragment = (FragmentListCategory) getSupportFragmentManager()
+                    .findFragmentById(R.id.fragmentContainerDashboardListCategory);
+            if (fragment != null) {
+                fragment.updateCategoryToDatabase();
+            }
+            recreate();
+        }
+        else if (item.getItemId() == R.id.option_clear_event_form) {
+            clearFields();
+        }
+        else if(item.getItemId() == R.id.option_delete_all_categories){
+            DatabaseManagement.clearCategoriesDatabase(this);
+
+            // Update category fragment UI
+            FragmentListCategory fragment = (FragmentListCategory) getSupportFragmentManager()
+                    .findFragmentById(R.id.fragmentContainerDashboardListCategory);
+
+            if (fragment != null){
+                fragment.updateRecyclerView();
+            }
+        }
+        else if(item.getItemId() == R.id.option_delete_all_events){
+            // Update event count in corresponding categories
+            ArrayList<Event> eventDb = DatabaseManagement.
+                    getEventDatabaseFromSharedPreferences(this);
+            ArrayList<Category> categoryDb = DatabaseManagement.
+                    getCategoryDatabaseFromSharedPreferences(this);
+            for(Event event : eventDb){
+                for(Category category : categoryDb) {
+                    if (event.getCategoryId().equals(category.getCategoryId())){
+                        category.setEventCount(category.getEventCount() - 1);
+                        DatabaseManagement.
+                                saveCategoryDatabaseToSharedPreferences(this, categoryDb);
+                    }
+
+                }
+            }
+            DatabaseManagement.clearEventDatabase(this);
+
+            // Update category fragment UI
+            FragmentListCategory fragment = (FragmentListCategory) getSupportFragmentManager()
+                    .findFragmentById(R.id.fragmentContainerDashboardListCategory);
+
+            if (fragment != null){
+                fragment.updateRecyclerView();
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     /**
      * Clears all edit texts within this activity
      */
@@ -95,6 +154,62 @@ public class DashboardActivity extends AppCompatActivity {
         editTextEventName.getText().clear();
         editTextTicketsAvailable.getText().clear();
         switchIsActive.setChecked(false);
+    }
+
+    private boolean isValidEventName(String eventName){
+        //Cannot only be numbers
+        if(eventName.matches("[0-9]+")){
+            return false;
+        }
+
+        // Can be alphanumeric and space
+        String validCharacters = "^[a-zA-Z0-9 ]+$";
+        return eventName.matches(validCharacters);
+    }
+
+    private String generateEventId() {
+        StringBuilder eventId = new StringBuilder();
+        Random rand = new Random();
+
+        // 2 random chars
+        char c1 = (char) (rand.nextInt(26) + 'A');
+        char c2 = (char) (rand.nextInt(26) + 'A');
+
+        // Random 5 digit number
+        int randomNumber = rand.nextInt(90000) + 10000;
+
+        eventId.append("E");
+        eventId.append(c1);
+        eventId.append(c2);
+        eventId.append("-");
+        eventId.append(randomNumber);
+
+        return eventId.toString();
+    }
+
+    private void setFabOnClickListener(FloatingActionButton fab){
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Show snackbar with undo action
+                if(saveFieldsToEventDatabase()) {  // If event form is successfully saved
+                    // Get the saved event
+                    ArrayList<Event> eventDb = DatabaseManagement.
+                            getEventDatabaseFromSharedPreferences(v.getContext());
+                    Event mostRecentSavedEvent = eventDb.get(eventDb.size() - 1);
+
+                    Snackbar.make(v, "Event " + mostRecentSavedEvent.getEventId() + " saved to category " +
+                                    mostRecentSavedEvent.getCategoryId(), Snackbar.LENGTH_LONG)
+                            .setAction("Undo", c -> undoSave(mostRecentSavedEvent)).show();
+
+                    // Refresh the category list fragment to reflect any changes
+                    FragmentListCategory categoryFragment = (FragmentListCategory) getSupportFragmentManager()
+                            .findFragmentById(R.id.fragmentContainerDashboardListCategory);
+
+                    categoryFragment.updateRecyclerView();
+                }
+            }
+        });
     }
 
     private boolean saveFieldsToEventDatabase() {
@@ -179,63 +294,7 @@ public class DashboardActivity extends AppCompatActivity {
         return true;
     }
 
-    private boolean isValidEventName(String eventName){
-        //Cannot only be numbers
-        if(eventName.matches("[0-9]+")){
-            return false;
-        }
-
-        // Can be alphanumeric and space
-        String validCharacters = "^[a-zA-Z0-9 ]+$";
-        return eventName.matches(validCharacters);
-    }
-
-    private String generateEventId() {
-        StringBuilder eventId = new StringBuilder();
-        Random rand = new Random();
-
-        // 2 random chars
-        char c1 = (char) (rand.nextInt(26) + 'A');
-        char c2 = (char) (rand.nextInt(26) + 'A');
-
-        // Random 5 digit number
-        int randomNumber = rand.nextInt(90000) + 10000;
-
-        eventId.append("E");
-        eventId.append(c1);
-        eventId.append(c2);
-        eventId.append("-");
-        eventId.append(randomNumber);
-
-        return eventId.toString();
-    }
-
-    private void setFabOnClickListener(FloatingActionButton fab){
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Show snackbar with undo action
-                if(saveFieldsToEventDatabase()) {  // If event form is successfully saved
-                   // Get the saved event
-                    ArrayList<Event> eventDb = DatabaseManagement.
-                            getEventDatabaseFromSharedPreferences(v.getContext());
-                    Event mostRecentSavedEvent = eventDb.get(eventDb.size() - 1);
-
-                    Snackbar.make(v, "Event " + mostRecentSavedEvent.getEventId() + " saved to category " +
-                                    mostRecentSavedEvent.getCategoryId(), Snackbar.LENGTH_LONG)
-                            .setAction("Undo", c -> undoSave(mostRecentSavedEvent)).show();
-
-                    // Refresh the category list fragment to reflect any changes
-                    FragmentListCategory categoryFragment = (FragmentListCategory) getSupportFragmentManager()
-                            .findFragmentById(R.id.fragmentContainerDashboardListCategory);
-
-                    categoryFragment.updateRecyclerView();
-                }
-            }
-        });
-    }
-
-    public void undoSave(Event event){
+    private void undoSave(Event event){
         DatabaseManagement.removeLastElementFromEventDatabase(this);
 
         // Update event count of corresponding Category
@@ -256,64 +315,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        // Open navigation drawer
-        if(actionBarDrawerToggle.onOptionsItemSelected(item))
-        {
-            return true;
-        }
-        else if (item.getItemId() == R.id.option_refresh) {
-            // Reload category list
-            FragmentListCategory fragment = (FragmentListCategory) getSupportFragmentManager()
-                    .findFragmentById(R.id.fragmentContainerDashboardListCategory);
-            if (fragment != null) {
-                fragment.updateCategoryToDatabase();
-            }
-            recreate();
-        }
-        else if (item.getItemId() == R.id.option_clear_event_form) {
-            clearFields();
-        }
-        else if(item.getItemId() == R.id.option_delete_all_categories){
-            DatabaseManagement.clearCategoriesDatabase(this);
 
-            // Update category fragment UI
-            FragmentListCategory fragment = (FragmentListCategory) getSupportFragmentManager()
-                    .findFragmentById(R.id.fragmentContainerDashboardListCategory);
-
-            if (fragment != null){
-                fragment.updateRecyclerView();
-            }
-        }
-        else if(item.getItemId() == R.id.option_delete_all_events){
-            // Update event count in corresponding categories
-            ArrayList<Event> eventDb = DatabaseManagement.
-                    getEventDatabaseFromSharedPreferences(this);
-            ArrayList<Category> categoryDb = DatabaseManagement.
-                    getCategoryDatabaseFromSharedPreferences(this);
-            for(Event event : eventDb){
-                for(Category category : categoryDb) {
-                    if (event.getCategoryId().equals(category.getCategoryId())){
-                        category.setEventCount(category.getEventCount() - 1);
-                        DatabaseManagement.
-                                saveCategoryDatabaseToSharedPreferences(this, categoryDb);
-                    }
-
-                }
-            }
-            DatabaseManagement.clearEventDatabase(this);
-
-            // Update category fragment UI
-            FragmentListCategory fragment = (FragmentListCategory) getSupportFragmentManager()
-                    .findFragmentById(R.id.fragmentContainerDashboardListCategory);
-
-            if (fragment != null){
-                fragment.updateRecyclerView();
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     class MyNavigationListener implements NavigationView.OnNavigationItemSelectedListener{
         @Override

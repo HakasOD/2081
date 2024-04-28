@@ -10,9 +10,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.exammple.eventmanager1.appmanagement.DatabaseManagement;
 import com.exammple.eventmanager1.appmanagement.KeyStore;
 import com.exammple.eventmanager1.R;
+import com.exammple.eventmanager1.entities.Category;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class NewEventCategoryActivity extends AppCompatActivity {
@@ -48,7 +51,12 @@ public class NewEventCategoryActivity extends AppCompatActivity {
             String categoryId = generateCategoryId();
             editTextCategoryId.setText(categoryId);
 
-            saveCategoryToSharedPreferences(categoryId, categoryNameString, eventCountInt, isActive);
+            //Save category to database
+            Category category = new Category(categoryId, categoryNameString, eventCountInt, isActive);
+            ArrayList<Category> db =
+                    DatabaseManagement.getCategoryDatabaseFromSharedPreferences(this);
+            db.add(category);
+            DatabaseManagement.saveCategoryDatabaseToSharedPreferences(this, db);
 
             Toast.makeText(this, "Category " + categoryId + " successfully saved", Toast.LENGTH_SHORT).show();
 
@@ -109,7 +117,7 @@ public class NewEventCategoryActivity extends AppCompatActivity {
 
         return false;
     }
-    public boolean isValidCategoryName(String categoryName){
+    private boolean isValidCategoryName(String categoryName){
        //Cannot only be numbers
         if(categoryName.matches("[0-9]+")){
             return false;
