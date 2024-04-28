@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -30,6 +31,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class DashboardActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
@@ -90,10 +92,14 @@ public class DashboardActivity extends AppCompatActivity {
      * Clears all edit texts within this activity
      */
     private void clearFields() {
-        //todo get edit texts
+        editTextCategoryId.getText().clear();
+        editTextEventId.getText().clear();
+        editTextEventName.getText().clear();
+        editTextTicketsAvailable.getText().clear();
+        switchIsActive.setChecked(false);
     }
 
-    public boolean saveFieldsToEventDatabase() {
+    private boolean saveFieldsToEventDatabase() {
         // Get data from fields
         String categoryId = editTextCategoryId.getText().toString();
         String eventName = editTextEventName.getText().toString();
@@ -105,26 +111,27 @@ public class DashboardActivity extends AppCompatActivity {
         } else ticketsAvailable = Integer.parseInt(ticketsAvailableString);
 
         // Save data to database
+        ArrayList<Event> db = DatabaseManagement.getEventDatabaseFromSharedPreferences(this);
         if (validFields(categoryId, eventName, ticketsAvailable)) {
             // Generate event ID
             String eventId = generateEventId();
             editTextEventId.setText(eventId);
 
-            db = DatabaseManagement.getEventDatabaseFromSharedPreferences(getContext());
+            db = DatabaseManagement.getEventDatabaseFromSharedPreferences(this);
 
             // Add event to db and save to shared preferences
             Event event = new Event(eventId, categoryId, eventName, ticketsAvailable, isActive);
             db.add(event);
-            DatabaseManagement.saveEventDatabaseToSharedPreferences(getContext(), db);
+            DatabaseManagement.saveEventDatabaseToSharedPreferences(this, db);
 
             // Update event count of corresponding Category
             ArrayList<Category> categoryDb = DatabaseManagement.
-                    getCategoryDatabaseFromSharedPreferences(getContext());
+                    getCategoryDatabaseFromSharedPreferences(this);
             for (Category category : categoryDb) {
                 // Add one to the event count if category id matches
                 if (category.getCategoryId().equals(db.get(db.size() - 1).getCategoryId())) {
                     category.setEventCount(category.getEventCount() + 1);
-                    DatabaseManagement.saveCategoryDatabaseToSharedPreferences(getContext(), categoryDb);
+                    DatabaseManagement.saveCategoryDatabaseToSharedPreferences(this, categoryDb);
                 }
             }
 
@@ -133,32 +140,99 @@ public class DashboardActivity extends AppCompatActivity {
         return false;
     }
 
+    private boolean validFields(String categoryId, String eventName, int ticketsAvailable) {
+        //Get category id from database
+        ArrayList<Category> db = DatabaseManagement.
+                getCategoryDatabaseFromSharedPreferences(this);
+
+        boolean existingCategoryId = false;
+        boolean validName = false;
+        boolean validTicketsAvailable = false;
+
+        // Entered categoryId must match an existing one
+        for (Category category : db) {
+            if (category.getCategoryId().equals(categoryId)) {
+                existingCategoryId = true;
+            }
+        }
+
+        if (isValidEventName(eventName))
+        {
+            validName = true;
+        }
+
+        if(ticketsAvailable >= 0){
+            validTicketsAvailable = true;
+        }
+
+        if(!validName){
+            Toast.makeText(this, "Invalid event name",
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (!validTicketsAvailable) {
+            Toast.makeText(this, "Invalid tickets available",
+                    Toast.LENGTH_SHORT).show();
+        } else if(!existingCategoryId) {
+            Toast.makeText(this, "Category does not exist",
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean isValidEventName(String eventName){
+        //Cannot only be numbers
+        if(eventName.matches("[0-9]+")){
+            return false;
+        }
+
+        // Can be alphanumeric and space
+        String validCharacters = "^[a-zA-Z0-9 ]+$";
+        return eventName.matches(validCharacters);
+    }
+
+    private String generateEventId() {
+        StringBuilder eventId = new StringBuilder();
+        Random rand = new Random();
+
+        // 2 random chars
+        char c1 = (char) (rand.nextInt(26) + 'A');
+        char c2 = (char) (rand.nextInt(26) + 'A');
+
+        // Random 5 digit number
+        int randomNumber = rand.nextInt(90000) + 10000;
+
+        eventId.append("E");
+        eventId.append(c1);
+        eventId.append(c2);
+        eventId.append("-");
+        eventId.append(randomNumber);
+
+        return eventId.toString();
+    }
 
     private void setFabOnClickListener(FloatingActionButton fab){
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Show snackbar with undo action
+                if(saveFieldsToEventDatabase()) {  // If event form is successfully saved
+                   // Get the saved event
+                    ArrayList<Event> eventDb = DatabaseManagement.
+                            getEventDatabaseFromSharedPreferences(v.getContext());
+                    Event mostRecentSavedEvent = eventDb.get(eventDb.size() - 1);
 
-                //todo get rid of event form fragment
+                    Snackbar.make(v, "Event " + mostRecentSavedEvent.getEventId() + " saved to category " +
+                                    mostRecentSavedEvent.getCategoryId(), Snackbar.LENGTH_LONG)
+                            .setAction("Undo", c -> undoSave(mostRecentSavedEvent)).show();
 
+                    // Refresh the category list fragment to reflect any changes
+                    FragmentListCategory categoryFragment = (FragmentListCategory) getSupportFragmentManager()
+                            .findFragmentById(R.id.fragmentContainerDashboardListCategory);
 
-//                // Show snackbar with undo action
-//                if(fragment.saveFieldsToEventDatabase(v)) {  // If event form is successfully saved
-//                   // Get the saved event
-//                    ArrayList<Event> eventDb = DatabaseManagement.
-//                            getEventDatabaseFromSharedPreferences(v.getContext());
-//                    Event mostRecentSavedEvent = eventDb.get(eventDb.size() - 1);
-//
-//                    Snackbar.make(v, "Event " + mostRecentSavedEvent.getEventId() + " saved to category " +
-//                                    mostRecentSavedEvent.getCategoryId(), Snackbar.LENGTH_LONG)
-//                            .setAction("Undo", c -> undoSave(mostRecentSavedEvent)).show();
-//
-//                    // Refresh the category list fragment to reflect any changes
-//                    FragmentListCategory categoryFragment = (FragmentListCategory) getSupportFragmentManager()
-//                            .findFragmentById(R.id.fragmentContainerDashboardListCategory);
-//
-//                    categoryFragment.updateRecyclerView();
-//                }
+                    categoryFragment.updateRecyclerView();
+                }
             }
         });
     }
@@ -230,7 +304,6 @@ public class DashboardActivity extends AppCompatActivity {
 
                 }
             }
-
             DatabaseManagement.clearEventDatabase(this);
 
             // Update category fragment UI
@@ -241,7 +314,6 @@ public class DashboardActivity extends AppCompatActivity {
                 fragment.updateRecyclerView();
             }
         }
-
         return super.onOptionsItemSelected(item);
     }
 
