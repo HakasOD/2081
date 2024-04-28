@@ -61,6 +61,7 @@ public class NewEventCategoryActivity extends AppCompatActivity {
             Toast.makeText(this, "Category " + categoryId + " successfully saved", Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(this, DashboardActivity.class);
+            intent.putExtra("fromActivity", "NewEventCategory");
             startActivity(intent);
         }
     }

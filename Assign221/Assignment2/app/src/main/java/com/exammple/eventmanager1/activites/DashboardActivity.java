@@ -50,9 +50,9 @@ public class DashboardActivity extends AppCompatActivity {
         editTextTicketsAvailable = findViewById(R.id.editTextTicketsAvailable);
         switchIsActive = findViewById(R.id.switchIsActiveEventForm);
 
+        // Add drawer bar toggle to action bar
         Toolbar myToolbar = findViewById(R.id.toolbar);
         myToolbar.setTitle("Assignment 2");
-        // Add drawer bar toggle to action bar
         drawerLayout = findViewById(R.id.draw);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, myToolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);

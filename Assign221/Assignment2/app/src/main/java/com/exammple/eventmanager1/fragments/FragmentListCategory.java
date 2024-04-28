@@ -2,6 +2,7 @@ package com.exammple.eventmanager1.fragments;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -123,13 +124,26 @@ public class FragmentListCategory extends Fragment {
         View view = inflater.inflate(R.layout.fragment_list_category, container, false);
 
         //Set adapter with recyclerview
-        recyclerView = view.findViewById(R.id.rvCategory);
-        categoryRecyclerAdapter = new CategoryRecyclerAdapter();
-        categoryRecyclerAdapter.setDb(db);
-        recyclerView.setAdapter(categoryRecyclerAdapter);
+        // Recycler view cannot be refreshed if the previous activity was new event category
+        Intent intent = getActivity().getIntent();
 
-        layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);
+        recyclerView = view.findViewById(R.id.rvCategory);
+        if(intent.getStringExtra("fromActivity") == null)
+        {
+            categoryRecyclerAdapter = new CategoryRecyclerAdapter();
+            categoryRecyclerAdapter.setDb(db);
+            recyclerView.setAdapter(categoryRecyclerAdapter);
+
+            layoutManager = new LinearLayoutManager(getContext());
+            recyclerView.setLayoutManager(layoutManager);
+        } else if (!intent.getStringExtra("fromActivity").equals("NewEventCategory")) {
+            categoryRecyclerAdapter = new CategoryRecyclerAdapter();
+            categoryRecyclerAdapter.setDb(db);
+            recyclerView.setAdapter(categoryRecyclerAdapter);
+
+            layoutManager = new LinearLayoutManager(getContext());
+            recyclerView.setLayoutManager(layoutManager);
+        }
 
         return view;
     }
