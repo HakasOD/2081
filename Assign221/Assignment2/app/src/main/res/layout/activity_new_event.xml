@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activites.NewEventActivity">
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="*Required"
+        android:textColor="#FF0000"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@+id/editTextEventName"
+        app:layout_constraintStart_toEndOf="@+id/textView21" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="*Required"
+        android:textColor="#FF0000"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@+id/editTextCategoryIdEventForm"
+        app:layout_constraintStart_toEndOf="@+id/textView20" />
+
+    <TextView
+        android:id="@+id/textView18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="sans-serif-black"
+        android:text="New Event Form"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextEventId"
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:ems="10"
+        android:hint="Event ID automatically generated"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="@+id/textView19"
+        app:layout_constraintTop_toBottomOf="@+id/textView19" />
+
+    <TextView
+        android:id="@+id/textView19"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Event ID"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView18" />
+
+    <TextView
+        android:id="@+id/textView20"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Category ID"
+        app:layout_constraintStart_toStartOf="@+id/editTextEventId"
+        app:layout_constraintTop_toBottomOf="@+id/editTextEventId" />
+
+    <EditText
+        android:id="@+id/editTextCategoryIdEventForm"
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:ems="10"
+        android:hint="Enter category ID"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="@+id/textView20"
+        app:layout_constraintTop_toBottomOf="@+id/textView20" />
+
+    <TextView
+        android:id="@+id/textView21"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Event Name"
+        app:layout_constraintStart_toStartOf="@+id/editTextCategoryIdEventForm"
+        app:layout_constraintTop_toBottomOf="@+id/editTextCategoryIdEventForm" />
+
+    <EditText
+        android:id="@+id/editTextEventName"
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:ems="10"
+        android:hint="Enter event name"
+        android:inputType="text"
+        android:numeric="integer"
+        app:layout_constraintStart_toStartOf="@+id/textView21"
+        app:layout_constraintTop_toBottomOf="@+id/textView21" />
+
+    <TextView
+        android:id="@+id/textView22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Tickets available"
+        app:layout_constraintStart_toStartOf="@+id/editTextEventName"
+        app:layout_constraintTop_toBottomOf="@+id/editTextEventName" />
+
+    <EditText
+        android:id="@+id/editTextTicketsAvailable"
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:ems="10"
+        android:hint="Enter number of tickets availible"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="@+id/textView22"
+        app:layout_constraintTop_toBottomOf="@+id/textView22" />
+
+    <Switch
+        android:id="@+id/switchIsActiveEventForm"
+        android:layout_width="137dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="8dp"
+        android:text="Is Active?"
+        app:layout_constraintStart_toStartOf="@+id/editTextTicketsAvailable"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTicketsAvailable" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
