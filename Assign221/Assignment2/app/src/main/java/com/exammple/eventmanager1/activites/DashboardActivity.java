@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -24,7 +23,6 @@ import com.exammple.eventmanager1.appmanagement.DatabaseManagement;
 import com.exammple.eventmanager1.R;
 import com.exammple.eventmanager1.entities.Category;
 import com.exammple.eventmanager1.entities.Event;
-import com.exammple.eventmanager1.fragments.EventFormFragment;
 import com.exammple.eventmanager1.fragments.FragmentListCategory;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
