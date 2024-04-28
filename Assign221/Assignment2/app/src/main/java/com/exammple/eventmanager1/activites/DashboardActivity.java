@@ -7,6 +7,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Switch;
+import android.widget.TextView;
 
 
 import androidx.annotation.NonNull;
@@ -33,11 +36,19 @@ public class DashboardActivity extends AppCompatActivity {
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private FloatingActionButton fab;
     NavigationView navigationView;
+    private EditText editTextEventId, editTextCategoryId, editTextEventName, editTextTicketsAvailable;
+    private Switch switchIsActive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+        editTextEventId = findViewById(R.id.editTextEventId);
+        editTextCategoryId = findViewById(R.id.editTextCategoryIdEventForm);
+        editTextEventName = findViewById(R.id.editTextEventName);
+        editTextTicketsAvailable = findViewById(R.id.editTextTicketsAvailable);
+        switchIsActive = findViewById(R.id.switchIsActiveEventForm);
 
         Toolbar myToolbar = findViewById(R.id.toolbar);
         myToolbar.setTitle("Assignment 2");
@@ -79,37 +90,75 @@ public class DashboardActivity extends AppCompatActivity {
      * Clears all edit texts within this activity
      */
     private void clearFields() {
-        EventFormFragment eventFormFragment = (EventFormFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.fragment_event_form);
-        if (eventFormFragment != null){
-            eventFormFragment.clearFields();
-        }
+        //todo get edit texts
     }
+
+    public boolean saveFieldsToEventDatabase() {
+        // Get data from fields
+        String categoryId = editTextCategoryId.getText().toString();
+        String eventName = editTextEventName.getText().toString();
+        boolean isActive = switchIsActive.isChecked();
+        String ticketsAvailableString = editTextTicketsAvailable.getText().toString();
+        int ticketsAvailable;
+        if (ticketsAvailableString.isEmpty()) {
+            ticketsAvailable = 0;
+        } else ticketsAvailable = Integer.parseInt(ticketsAvailableString);
+
+        // Save data to database
+        if (validFields(categoryId, eventName, ticketsAvailable)) {
+            // Generate event ID
+            String eventId = generateEventId();
+            editTextEventId.setText(eventId);
+
+            db = DatabaseManagement.getEventDatabaseFromSharedPreferences(getContext());
+
+            // Add event to db and save to shared preferences
+            Event event = new Event(eventId, categoryId, eventName, ticketsAvailable, isActive);
+            db.add(event);
+            DatabaseManagement.saveEventDatabaseToSharedPreferences(getContext(), db);
+
+            // Update event count of corresponding Category
+            ArrayList<Category> categoryDb = DatabaseManagement.
+                    getCategoryDatabaseFromSharedPreferences(getContext());
+            for (Category category : categoryDb) {
+                // Add one to the event count if category id matches
+                if (category.getCategoryId().equals(db.get(db.size() - 1).getCategoryId())) {
+                    category.setEventCount(category.getEventCount() + 1);
+                    DatabaseManagement.saveCategoryDatabaseToSharedPreferences(getContext(), categoryDb);
+                }
+            }
+
+            return true;
+        }
+        return false;
+    }
+
 
     private void setFabOnClickListener(FloatingActionButton fab){
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventFormFragment fragment = (EventFormFragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.fragment_event_form);
 
-                // Show snackbar with undo action
-                if(fragment.saveFieldsToEventDatabase(v)) {  // If event form is successfully saved
-                   // Get the saved event
-                    ArrayList<Event> eventDb = DatabaseManagement.
-                            getEventDatabaseFromSharedPreferences(v.getContext());
-                    Event mostRecentSavedEvent = eventDb.get(eventDb.size() - 1);
+                //todo get rid of event form fragment
 
-                    Snackbar.make(v, "Event " + mostRecentSavedEvent.getEventId() + " saved to category " +
-                                    mostRecentSavedEvent.getCategoryId(), Snackbar.LENGTH_LONG)
-                            .setAction("Undo", c -> undoSave(mostRecentSavedEvent)).show();
 
-                    // Refresh the category list fragment to reflect any changes
-                    FragmentListCategory categoryFragment = (FragmentListCategory) getSupportFragmentManager()
-                            .findFragmentById(R.id.fragmentContainerDashboardListCategory);
-
-                    categoryFragment.updateRecyclerView();
-                }
+//                // Show snackbar with undo action
+//                if(fragment.saveFieldsToEventDatabase(v)) {  // If event form is successfully saved
+//                   // Get the saved event
+//                    ArrayList<Event> eventDb = DatabaseManagement.
+//                            getEventDatabaseFromSharedPreferences(v.getContext());
+//                    Event mostRecentSavedEvent = eventDb.get(eventDb.size() - 1);
+//
+//                    Snackbar.make(v, "Event " + mostRecentSavedEvent.getEventId() + " saved to category " +
+//                                    mostRecentSavedEvent.getCategoryId(), Snackbar.LENGTH_LONG)
+//                            .setAction("Undo", c -> undoSave(mostRecentSavedEvent)).show();
+//
+//                    // Refresh the category list fragment to reflect any changes
+//                    FragmentListCategory categoryFragment = (FragmentListCategory) getSupportFragmentManager()
+//                            .findFragmentById(R.id.fragmentContainerDashboardListCategory);
+//
+//                    categoryFragment.updateRecyclerView();
+//                }
             }
         });
     }

@@ -60,7 +60,7 @@ public class EventFormFragment extends Fragment {
         return fragment;
     }
 
-    public boolean saveFieldsToEventDatabase(View v) {
+    public boolean saveFieldsToEventDatabase() {
         // Get data from fields
         String categoryId = editTextCategoryId.getText().toString();
         String eventName = editTextEventName.getText().toString();
