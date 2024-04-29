@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.exammple.eventmanager1.appmanagement.DatabaseManagement;
-import com.exammple.eventmanager1.entities.Event;
+import com.exammple.eventmanager1.provider.Event;
 import com.exammple.eventmanager1.recycleradapters.EventRecyclerAdapter;
 import com.exammple.eventmanager1.R;
 import com.google.gson.Gson;

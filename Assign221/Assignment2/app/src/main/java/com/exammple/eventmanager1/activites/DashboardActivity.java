@@ -18,12 +18,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 
 import com.exammple.eventmanager1.appmanagement.DatabaseManagement;
 import com.exammple.eventmanager1.R;
-import com.exammple.eventmanager1.entities.Category;
-import com.exammple.eventmanager1.entities.Event;
+import com.exammple.eventmanager1.provider.Category;
+import com.exammple.eventmanager1.provider.Event;
 import com.exammple.eventmanager1.fragments.FragmentListCategory;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -321,7 +320,7 @@ public class DashboardActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
             int id = menuItem.getItemId();
-            
+
             if(id == R.id.item_add_category){
                 Intent intent = new Intent(DashboardActivity.this, NewEventCategoryActivity.class);
                 startActivity(intent);

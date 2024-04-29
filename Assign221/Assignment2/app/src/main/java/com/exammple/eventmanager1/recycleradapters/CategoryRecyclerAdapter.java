@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.exammple.eventmanager1.R;
-import com.exammple.eventmanager1.entities.Category;
+import com.exammple.eventmanager1.provider.Category;
 
 import java.util.ArrayList;
 

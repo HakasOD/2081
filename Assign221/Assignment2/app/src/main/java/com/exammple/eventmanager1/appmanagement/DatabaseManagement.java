@@ -4,11 +4,9 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
-import com.exammple.eventmanager1.entities.Category;
-import com.exammple.eventmanager1.entities.Event;
-import com.exammple.eventmanager1.fragments.FragmentListCategory;
+import com.exammple.eventmanager1.provider.Category;
+import com.exammple.eventmanager1.provider.Event;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

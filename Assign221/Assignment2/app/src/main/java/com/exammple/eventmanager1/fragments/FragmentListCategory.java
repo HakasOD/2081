@@ -2,7 +2,6 @@ package com.exammple.eventmanager1.fragments;
 
 import static android.content.Context.MODE_PRIVATE;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -15,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.exammple.eventmanager1.recycleradapters.CategoryRecyclerAdapter;
-import com.exammple.eventmanager1.entities.Category;
+import com.exammple.eventmanager1.provider.Category;
 import com.exammple.eventmanager1.appmanagement.DatabaseManagement;
 import com.exammple.eventmanager1.appmanagement.KeyStore;
 import com.exammple.eventmanager1.R;

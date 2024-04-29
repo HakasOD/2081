@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.exammple.eventmanager1.appmanagement.DatabaseManagement;
 import com.exammple.eventmanager1.appmanagement.KeyStore;
 import com.exammple.eventmanager1.R;
-import com.exammple.eventmanager1.entities.Category;
+import com.exammple.eventmanager1.provider.Category;
 
 import java.util.ArrayList;
 import java.util.Random;

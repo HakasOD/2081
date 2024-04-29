@@ -1,5 +1,6 @@
-package com.exammple.eventmanager1.entities;
+package com.exammple.eventmanager1.provider;
 
+//todo convert into entity
 public class Event {
     String eventId;
     String categoryId;
