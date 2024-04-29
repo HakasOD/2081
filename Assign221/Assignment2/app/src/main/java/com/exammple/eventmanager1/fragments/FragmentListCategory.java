@@ -119,32 +119,22 @@ public class FragmentListCategory extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         db = DatabaseManagement.getCategoryDatabaseFromSharedPreferences(getContext());
-
         // Inflate the layout
         View view = inflater.inflate(R.layout.fragment_list_category, container, false);
 
         //Set adapter with recyclerview
-        // Recycler view cannot be refreshed if the previous activity was new event category
-        Intent intent = getActivity().getIntent();
-
         recyclerView = view.findViewById(R.id.rvCategory);
-        if(intent.getStringExtra("fromActivity") == null)
-        {
-            categoryRecyclerAdapter = new CategoryRecyclerAdapter();
-            categoryRecyclerAdapter.setDb(db);
-            recyclerView.setAdapter(categoryRecyclerAdapter);
 
-            layoutManager = new LinearLayoutManager(getContext());
-            recyclerView.setLayoutManager(layoutManager);
-        } else if (!intent.getStringExtra("fromActivity").equals("NewEventCategory")) {
-            categoryRecyclerAdapter = new CategoryRecyclerAdapter();
-            categoryRecyclerAdapter.setDb(db);
-            recyclerView.setAdapter(categoryRecyclerAdapter);
+        categoryRecyclerAdapter = new CategoryRecyclerAdapter();
+        categoryRecyclerAdapter.setDb(db);
+        recyclerView.setAdapter(categoryRecyclerAdapter);
 
-            layoutManager = new LinearLayoutManager(getContext());
-            recyclerView.setLayoutManager(layoutManager);
-        }
+        layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+
 
         return view;
     }
+
+
 }
