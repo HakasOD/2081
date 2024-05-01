@@ -3,6 +3,7 @@ package com.exammple.eventmanager1.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,7 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.exammple.eventmanager1.provider.Category;
 import com.exammple.eventmanager1.provider.Event;
+import com.exammple.eventmanager1.provider.EventManagerViewModel;
 import com.exammple.eventmanager1.recycleradapters.EventRecyclerAdapter;
 import com.exammple.eventmanager1.R;
 import com.google.gson.Gson;
@@ -34,6 +37,7 @@ public class FragmentListEvent extends Fragment {
     EventRecyclerAdapter recyclerAdapter;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
+    EventManagerViewModel eventManagerViewModel;
 
     public FragmentListEvent() {
         // Required empty public constructor
@@ -68,7 +72,6 @@ public class FragmentListEvent extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //todo database for events
 
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_list_event, container, false);
@@ -77,6 +80,13 @@ public class FragmentListEvent extends Fragment {
         recyclerView = v.findViewById(R.id.rvEvent);
         recyclerAdapter = new EventRecyclerAdapter();
         recyclerView.setAdapter(recyclerAdapter);
+
+        // Set database
+        eventManagerViewModel = new ViewModelProvider(this).get(EventManagerViewModel.class);
+        eventManagerViewModel.getAllEvents().observe(getViewLifecycleOwner(), newData -> {
+            recyclerAdapter.setDb((ArrayList<Event>) newData);
+            recyclerAdapter.notifyDataSetChanged();
+        });
 
         layoutManager = new LinearLayoutManager(v.getContext());
         recyclerView.setLayoutManager(layoutManager);

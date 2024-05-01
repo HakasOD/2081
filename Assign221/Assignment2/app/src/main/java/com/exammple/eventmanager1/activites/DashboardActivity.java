@@ -18,10 +18,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.exammple.eventmanager1.R;
 import com.exammple.eventmanager1.provider.Category;
 import com.exammple.eventmanager1.provider.Event;
+import com.exammple.eventmanager1.provider.EventManagerViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
@@ -35,6 +37,7 @@ public class DashboardActivity extends AppCompatActivity {
     NavigationView navigationView;
     private EditText editTextEventId, editTextCategoryId, editTextEventName, editTextTicketsAvailable;
     private Switch switchIsActive;
+    EventManagerViewModel eventManagerViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +77,8 @@ public class DashboardActivity extends AppCompatActivity {
         LayoutInflater inflater = LayoutInflater.from(this);
         View cardLayout = inflater.inflate(R.layout.category_list_headings_card, cardView, false);
         cardView.addView(cardLayout);
+
+        eventManagerViewModel = new ViewModelProvider(this).get(EventManagerViewModel.class);
     }
 
     @Override
@@ -150,29 +155,37 @@ public class DashboardActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // todo reimplemnt fab onclick
+                saveFieldsToEventDatabase();
             }
         });
     }
 
     //todo reimplement saving to event database
-//    private boolean saveFieldsToEventDatabase() {
-//        // Get data from fields
-//        String categoryId = editTextCategoryId.getText().toString();
-//        String eventName = editTextEventName.getText().toString();
-//        boolean isActive = switchIsActive.isChecked();
-//        String ticketsAvailableString = editTextTicketsAvailable.getText().toString();
-//        int ticketsAvailable;
-//        if (ticketsAvailableString.isEmpty()) {
-//            ticketsAvailable = 0;
-//        } else ticketsAvailable = Integer.parseInt(ticketsAvailableString);
-//
-//
-//        return true;
-//    }
+    private boolean saveFieldsToEventDatabase() {
+        // Get data from fields
+        String categoryId = editTextCategoryId.getText().toString();
+        String eventName = editTextEventName.getText().toString();
+        boolean isActive = switchIsActive.isChecked();
+        String ticketsAvailableString = editTextTicketsAvailable.getText().toString();
+        int ticketsAvailable;
+        if (ticketsAvailableString.isEmpty()) {
+            ticketsAvailable = 0;
+        } else ticketsAvailable = Integer.parseInt(ticketsAvailableString);
 
-    private boolean validFields(String categoryId, String eventName, int ticketsAvailable) {
-        //todo reimplement validate fields
+        // Add to event database if valid
+        if (validEventFields(categoryId, eventName, ticketsAvailable))
+        {
+            // generate eventId
+            String eventId = generateEventId();
+
+            Event event = new Event(eventId, categoryId, eventName, ticketsAvailable, isActive);
+            eventManagerViewModel.insertEvent(event);
+        }
+
+        return true;
+    }
+
+    private boolean validEventFields(String categoryId, String eventName, int ticketsAvailable) {
         //Get category id from database
 
 
@@ -180,12 +193,14 @@ public class DashboardActivity extends AppCompatActivity {
         boolean validName = false;
         boolean validTicketsAvailable = false;
 
+        //todo validate with categoryId
 //        // Entered categoryId must match an existing one
 //        for (Category category : db) {
 //            if (category.getCategoryId().equals(categoryId)) {
 //                existingCategoryId = true;
 //            }
 //        }
+        existingCategoryId = true;
 
         if (isValidEventName(eventName))
         {

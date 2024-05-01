@@ -54,7 +54,7 @@ public class NewEventCategoryActivity extends AppCompatActivity {
 
             //Save category to database
             Category category = new Category(categoryId, categoryNameString, eventCountInt, isActive);
-            eventManagerViewModel.insert(category);
+            eventManagerViewModel.insertCategory(category);
 
             Toast.makeText(this, "Category " + categoryId + " successfully saved",
                     Toast.LENGTH_SHORT).show();

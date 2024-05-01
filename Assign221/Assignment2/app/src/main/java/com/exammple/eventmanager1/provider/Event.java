@@ -70,7 +70,7 @@ public class Event {
         this.ticketsAvailable = ticketsAvailable;
     }
 
-    public boolean isActive() {
+    public boolean getIsActive() {
         return isActive;
     }
 

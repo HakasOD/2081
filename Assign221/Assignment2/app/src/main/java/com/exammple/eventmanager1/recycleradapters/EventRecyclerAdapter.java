@@ -14,10 +14,10 @@ import com.exammple.eventmanager1.provider.Event;
 import java.util.ArrayList;
 
 public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdapter.CustomViewHolder>{
-
-//    public void setDb(ArrayList<Event> db){
-//        this.db = db;
-//    }
+    ArrayList<Event> db = new ArrayList<>();
+    public void setDb(ArrayList<Event> db){
+        this.db = db;
+    }
 
     @NonNull
     @Override
@@ -28,26 +28,23 @@ public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdap
         return new CustomViewHolder(v);
     }
 
-    //todo update event recycler adapter
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
-//        holder.tvEventId.setText(db.get(position).getEventId());
-//        holder.tvCategoryId.setText(db.get(position).getCategoryId());
-//        holder.tvCategoryName.setText(db.get(position).getName());
-//        holder.tvTicketsAvailable.setText(String.valueOf(db.get(position).getTicketsAvailable()));
-//        if(db.get(position).isActive){
-//            holder.tvIsActive.setText("Active");
-//        }else holder.tvIsActive.setText("Inactive");
+        holder.tvEventId.setText(db.get(position).getEventId());
+        holder.tvCategoryId.setText(db.get(position).getCategoryId());
+        holder.tvCategoryName.setText(db.get(position).getName());
+        holder.tvTicketsAvailable.setText(String.valueOf(db.get(position).getTicketsAvailable()));
+        if(db.get(position).getIsActive()){
+            holder.tvIsActive.setText("Active");
+        }else holder.tvIsActive.setText("Inactive");
 
     }
 
     @Override
     public int getItemCount() {
-        //todo update get item count
-//        if(this.db != null){
-//            return this.db.size();
-//        }
-//        return 0;
+        if(this.db != null){
+            return this.db.size();
+        }
         return 0;
     }
 
