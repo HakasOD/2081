@@ -107,10 +107,10 @@ public class DashboardActivity extends AppCompatActivity {
             clearFields();
         }
         else if(item.getItemId() == R.id.option_delete_all_categories){
-            //todo reimplement delete all categories
+            eventManagerViewModel.deleteAllCategories();
         }
         else if(item.getItemId() == R.id.option_delete_all_events){
-            //todo reimplement delete all events
+            eventManagerViewModel.deleteAllEvents();
         }
         return super.onOptionsItemSelected(item);
     }
