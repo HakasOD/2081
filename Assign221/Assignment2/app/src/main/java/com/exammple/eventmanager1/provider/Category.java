@@ -13,6 +13,7 @@ public class Category {
     @NonNull
     private int id;
 
+    //todo add event location field
     @ColumnInfo(name = "categoryId")
     private String categoryId;
     @ColumnInfo(name = "categoryName")

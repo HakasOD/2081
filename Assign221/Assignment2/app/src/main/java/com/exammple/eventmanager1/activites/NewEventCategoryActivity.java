@@ -1,7 +1,6 @@
 package com.exammple.eventmanager1.activites;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -11,13 +10,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.exammple.eventmanager1.appmanagement.DatabaseManagement;
-import com.exammple.eventmanager1.appmanagement.KeyStore;
 import com.exammple.eventmanager1.R;
 import com.exammple.eventmanager1.provider.Category;
 import com.exammple.eventmanager1.provider.EventManagerViewModel;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public class NewEventCategoryActivity extends AppCompatActivity {
@@ -38,7 +34,6 @@ public class NewEventCategoryActivity extends AppCompatActivity {
         switchIsActive = findViewById(R.id.switchIsActive);
 
         eventManagerViewModel = new ViewModelProvider(this).get(EventManagerViewModel.class);
-
     }
 
     public void onSaveEventCategoryButtonClick(View view) {
@@ -61,10 +56,10 @@ public class NewEventCategoryActivity extends AppCompatActivity {
             Category category = new Category(categoryId, categoryNameString, eventCountInt, isActive);
             eventManagerViewModel.insert(category);
 
-            Toast.makeText(this, "Category " + categoryId + " successfully saved", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Category " + categoryId + " successfully saved",
+                    Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(this, DashboardActivity.class);
-            intent.putExtra("fromActivity", "NewEventCategory");
             startActivity(intent);
         }
     }
@@ -119,7 +114,4 @@ public class NewEventCategoryActivity extends AppCompatActivity {
         String validCharacters = "^[a-zA-Z0-9 ]+$";
         return categoryName.matches(validCharacters);
     }
-
-
-
 }

@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.exammple.eventmanager1.appmanagement.DatabaseManagement;
 import com.exammple.eventmanager1.provider.Event;
 import com.exammple.eventmanager1.recycleradapters.EventRecyclerAdapter;
 import com.exammple.eventmanager1.R;
@@ -32,11 +31,9 @@ public class FragmentListEvent extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    ArrayList<Event> db = new ArrayList<>();
     EventRecyclerAdapter recyclerAdapter;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
-    Gson gson = new Gson();
 
     public FragmentListEvent() {
         // Required empty public constructor
@@ -71,7 +68,7 @@ public class FragmentListEvent extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        db = DatabaseManagement.getEventDatabaseFromSharedPreferences(getContext());
+        //todo database for events
 
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_list_event, container, false);
@@ -79,7 +76,6 @@ public class FragmentListEvent extends Fragment {
         // Link adapter and recyclerview
         recyclerView = v.findViewById(R.id.rvEvent);
         recyclerAdapter = new EventRecyclerAdapter();
-        recyclerAdapter.setDb(db);
         recyclerView.setAdapter(recyclerAdapter);
 
         layoutManager = new LinearLayoutManager(v.getContext());

@@ -19,14 +19,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.exammple.eventmanager1.appmanagement.DatabaseManagement;
 import com.exammple.eventmanager1.R;
 import com.exammple.eventmanager1.provider.Category;
 import com.exammple.eventmanager1.provider.Event;
-import com.exammple.eventmanager1.fragments.FragmentListCategory;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -94,54 +91,15 @@ public class DashboardActivity extends AppCompatActivity {
         }
         else if (item.getItemId() == R.id.option_refresh) {
             //todo reimplement refresh button
-//            // Reload category list
-//            FragmentListCategory fragment = (FragmentListCategory) getSupportFragmentManager()
-//                    .findFragmentById(R.id.fragmentContainerDashboardListCategory);
-//            if (fragment != null) {
-//                fragment.updateCategoryToDatabase();
-//            }
-//            recreate();
         }
         else if (item.getItemId() == R.id.option_clear_event_form) {
             clearFields();
         }
         else if(item.getItemId() == R.id.option_delete_all_categories){
             //todo reimplement delete all categories
-//            DatabaseManagement.clearCategoriesDatabase(this);
-//
-//            // Update category fragment UI
-//            FragmentListCategory fragment = (FragmentListCategory) getSupportFragmentManager()
-//                    .findFragmentById(R.id.fragmentContainerDashboardListCategory);
-//
-//            if (fragment != null){
-//                fragment.updateRecyclerView();
-//            }
         }
         else if(item.getItemId() == R.id.option_delete_all_events){
-            // Update event count in corresponding categories
-            ArrayList<Event> eventDb = DatabaseManagement.
-                    getEventDatabaseFromSharedPreferences(this);
-            ArrayList<Category> categoryDb = DatabaseManagement.
-                    getCategoryDatabaseFromSharedPreferences(this);
-            for(Event event : eventDb){
-                for(Category category : categoryDb) {
-                    if (event.getCategoryId().equals(category.getCategoryId())){
-                        category.setEventCount(category.getEventCount() - 1);
-                        DatabaseManagement.
-                                saveCategoryDatabaseToSharedPreferences(this, categoryDb);
-                    }
-
-                }
-            }
-            DatabaseManagement.clearEventDatabase(this);
-
-//            // Update category fragment UI
-//            FragmentListCategory fragment = (FragmentListCategory) getSupportFragmentManager()
-//                    .findFragmentById(R.id.fragmentContainerDashboardListCategory);
-//
-//            if (fragment != null){
-//                fragment.updateRecyclerView();
-//            }
+            //todo reimplement delete all events
         }
         return super.onOptionsItemSelected(item);
     }
@@ -192,83 +150,42 @@ public class DashboardActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Show snackbar with undo action
-                if(saveFieldsToEventDatabase()) {  // If event form is successfully saved
-                    // Get the saved event
-                    ArrayList<Event> eventDb = DatabaseManagement.
-                            getEventDatabaseFromSharedPreferences(v.getContext());
-                    Event mostRecentSavedEvent = eventDb.get(eventDb.size() - 1);
-
-                    Snackbar.make(v, "Event " + mostRecentSavedEvent.getEventId() + " saved to category " +
-                                    mostRecentSavedEvent.getCategoryId(), Snackbar.LENGTH_LONG)
-                            .setAction("Undo", c -> undoSave(mostRecentSavedEvent)).show();
-
-//                    // Refresh the category list fragment to reflect any changes
-//                    FragmentListCategory categoryFragment = (FragmentListCategory) getSupportFragmentManager()
-//                            .findFragmentById(R.id.fragmentContainerDashboardListCategory);
-//
-////                    categoryFragment.updateRecyclerView();
-                }
+               // todo reimplemnt fab onclick
             }
         });
     }
 
-    private boolean saveFieldsToEventDatabase() {
-        // Get data from fields
-        String categoryId = editTextCategoryId.getText().toString();
-        String eventName = editTextEventName.getText().toString();
-        boolean isActive = switchIsActive.isChecked();
-        String ticketsAvailableString = editTextTicketsAvailable.getText().toString();
-        int ticketsAvailable;
-        if (ticketsAvailableString.isEmpty()) {
-            ticketsAvailable = 0;
-        } else ticketsAvailable = Integer.parseInt(ticketsAvailableString);
-
-        // Save data to database
-        ArrayList<Event> db = DatabaseManagement.getEventDatabaseFromSharedPreferences(this);
-        if (validFields(categoryId, eventName, ticketsAvailable)) {
-            // Generate event ID
-            String eventId = generateEventId();
-            editTextEventId.setText(eventId);
-
-            db = DatabaseManagement.getEventDatabaseFromSharedPreferences(this);
-
-            // Add event to db and save to shared preferences
-            Event event = new Event(eventId, categoryId, eventName, ticketsAvailable, isActive);
-            db.add(event);
-            DatabaseManagement.saveEventDatabaseToSharedPreferences(this, db);
-
-            // Update event count of corresponding Category
-            ArrayList<Category> categoryDb = DatabaseManagement.
-                    getCategoryDatabaseFromSharedPreferences(this);
-            for (Category category : categoryDb) {
-                // Add one to the event count if category id matches
-                if (category.getCategoryId().equals(db.get(db.size() - 1).getCategoryId())) {
-                    category.setEventCount(category.getEventCount() + 1);
-                    DatabaseManagement.saveCategoryDatabaseToSharedPreferences(this, categoryDb);
-                }
-            }
-
-            return true;
-        }
-        return false;
-    }
+    //todo reimplement saving to event database
+//    private boolean saveFieldsToEventDatabase() {
+//        // Get data from fields
+//        String categoryId = editTextCategoryId.getText().toString();
+//        String eventName = editTextEventName.getText().toString();
+//        boolean isActive = switchIsActive.isChecked();
+//        String ticketsAvailableString = editTextTicketsAvailable.getText().toString();
+//        int ticketsAvailable;
+//        if (ticketsAvailableString.isEmpty()) {
+//            ticketsAvailable = 0;
+//        } else ticketsAvailable = Integer.parseInt(ticketsAvailableString);
+//
+//
+//        return true;
+//    }
 
     private boolean validFields(String categoryId, String eventName, int ticketsAvailable) {
+        //todo reimplement validate fields
         //Get category id from database
-        ArrayList<Category> db = DatabaseManagement.
-                getCategoryDatabaseFromSharedPreferences(this);
+
 
         boolean existingCategoryId = false;
         boolean validName = false;
         boolean validTicketsAvailable = false;
 
-        // Entered categoryId must match an existing one
-        for (Category category : db) {
-            if (category.getCategoryId().equals(categoryId)) {
-                existingCategoryId = true;
-            }
-        }
+//        // Entered categoryId must match an existing one
+//        for (Category category : db) {
+//            if (category.getCategoryId().equals(categoryId)) {
+//                existingCategoryId = true;
+//            }
+//        }
 
         if (isValidEventName(eventName))
         {
@@ -296,24 +213,18 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void undoSave(Event event){
-        DatabaseManagement.removeLastElementFromEventDatabase(this);
-
-        // Update event count of corresponding Category
-        ArrayList<Category> categoryDb = DatabaseManagement.
-                getCategoryDatabaseFromSharedPreferences(this);
-        for(Category category : categoryDb){
-            if (category.getCategoryId().equals(event.getCategoryId())) {
-                category.setEventCount(category.getEventCount() - 1);
-                DatabaseManagement.
-                        saveCategoryDatabaseToSharedPreferences(this,categoryDb);
-            }
-        }
-
-//        // Update ui
-//        FragmentListCategory categoryFragment = (FragmentListCategory) getSupportFragmentManager()
-//                .findFragmentById(R.id.fragmentContainerDashboardListCategory);
-//        categoryFragment.updateRecyclerView();
-
+        //todo reimplement undoSave
+//
+//        // Update event count of corresponding Category
+//        ArrayList<Category> categoryDb = DatabaseManagement.
+//                getCategoryDatabaseFromSharedPreferences(this);
+//        for(Category category : categoryDb){
+//            if (category.getCategoryId().equals(event.getCategoryId())) {
+//                category.setEventCount(category.getEventCount() - 1);
+//                DatabaseManagement.
+//                        saveCategoryDatabaseToSharedPreferences(this,categoryDb);
+//            }
+//        }
     }
 
 
@@ -335,7 +246,7 @@ public class DashboardActivity extends AppCompatActivity {
             } else if (id == R.id.item_logout) {
                 Intent intent = new Intent(DashboardActivity.this, ShowLogInPage.class);
                 startActivity(intent);
-                finish();
+                finish(); //todo make it so you cant go back on log out
             }
             drawerLayout.closeDrawers();
             return true;
