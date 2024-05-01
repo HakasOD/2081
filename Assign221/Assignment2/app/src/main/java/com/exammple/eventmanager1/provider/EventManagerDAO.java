@@ -19,4 +19,16 @@ public interface EventManagerDAO {
     void deleteCategory(String categoryName);
     @Query("delete from categories")
     void deleteAllCategories();
+
+    @Query("select * from events")
+    LiveData<List<Event>> getAllEvents();
+    @Query("select * from events where eventName=:eventName")
+    List<Event> getEvent(String eventName);
+    @Insert
+    void addEvent(Event event);
+    @Query("delete from events where eventName=:eventName")
+    void deleteEvent(String eventName);
+    @Query("delete from events")
+    void deleteAllEvents();
+
 }

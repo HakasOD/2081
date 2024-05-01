@@ -22,9 +22,11 @@ public class EventManagerViewModel extends AndroidViewModel {
         return repository.getAllCategories();
     }
 
-    public void insert(Category category){repository.insert(category);}
+    public void insert(Category category){repository.insertCategory(category);}
 
     public void deleteCategory(String name){repository.deleteCategory(name);}
 
     public void deleteAllCategories(){repository.deleteAllCategories();}
+
+    public LiveData<List<Event>> getAllEvents() {return repository.getAllEvents();}
 }

@@ -13,7 +13,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.exammple.eventmanager1.appmanagement.KeyStore;
+import com.exammple.eventmanager1.KeyStore;
 import com.exammple.eventmanager1.R;
 
 public class ShowLogInPage extends AppCompatActivity {

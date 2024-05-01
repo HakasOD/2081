@@ -1,4 +1,4 @@
-package com.exammple.eventmanager1.appmanagement;
+package com.exammple.eventmanager1;
 
 public class KeyStore {
     public static final String USERNAME_KEY = "name-key";

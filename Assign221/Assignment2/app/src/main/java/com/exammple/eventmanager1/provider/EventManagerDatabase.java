@@ -13,7 +13,7 @@ import androidx.sqlite.db.SupportSQLiteOpenHelper;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Category.class}, version = 1)
+@Database(entities = {Category.class, Event.class}, version = 1)
 public abstract class EventManagerDatabase extends RoomDatabase{
     public static final  String EVENT_MANAGER_DATABASE_NAME = "eventManagerDatabase";
     public abstract EventManagerDAO EventManagerDAO();

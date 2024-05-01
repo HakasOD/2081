@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.exammple.eventmanager1.appmanagement.KeyStore;
+import com.exammple.eventmanager1.KeyStore;
 import com.exammple.eventmanager1.R;
 
 public class MainActivity extends AppCompatActivity {

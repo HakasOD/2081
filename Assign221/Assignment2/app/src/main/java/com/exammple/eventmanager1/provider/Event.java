@@ -1,12 +1,26 @@
 package com.exammple.eventmanager1.provider;
 
-//todo convert into entity
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "events")
 public class Event {
-    String eventId;
-    String categoryId;
-    String name;
-    int ticketsAvailable;
-    public boolean isActive;
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    @NonNull
+    private int id;
+    @ColumnInfo(name = "eventId")
+    private String eventId;
+    @ColumnInfo(name = "categoryId")
+    private String categoryId;
+    @ColumnInfo(name = "eventName")
+    private String name;
+    @ColumnInfo(name = "ticketsAvailable")
+    private int ticketsAvailable;
+    @ColumnInfo(name = "isActive")
+    private boolean isActive;
 
     public Event(String eventId, String categoryId, String name, int ticketsAvailable, boolean isActive) {
         this.eventId = eventId;
@@ -14,6 +28,14 @@ public class Event {
         this.name = name;
         this.ticketsAvailable = ticketsAvailable;
         this.isActive = isActive;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getEventId() {
