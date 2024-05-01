@@ -1,6 +1,7 @@
 package com.exammple.eventmanager1.provider;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -24,6 +25,10 @@ public class EventManagerRepository {
 
     void insertCategory(Category category){
         EventManagerDatabase.databaseWriteExecutor.execute(() -> eventManagerDAO.addCategory(category));
+    }
+
+    boolean categoryIdExists(String categoryId){
+        return eventManagerDAO.getCategoryCount(categoryId) > 0;
     }
 
     void deleteCategory(String categoryName){

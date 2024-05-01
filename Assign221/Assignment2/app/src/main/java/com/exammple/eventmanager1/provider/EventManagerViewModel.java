@@ -26,6 +26,7 @@ public class EventManagerViewModel extends AndroidViewModel {
     }
 
     public void insertCategory(Category category){repository.insertCategory(category);}
+    public boolean categoryIdExists(String categoryId){return repository.categoryIdExists(categoryId);}
 
     public void deleteCategory(String name){repository.deleteCategory(name);}
 

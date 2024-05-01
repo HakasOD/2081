@@ -13,6 +13,8 @@ public interface EventManagerDAO {
     LiveData<List<Category>> getAllCategories();
     @Query("select * from categories where categoryName=:categoryName")
     List<Category> getCategory(String categoryName);
+    @Query("select count(*) from categories where categoryId=:categoryId")
+    int getCategoryCount(String categoryId);
     @Insert
     void addCategory(Category category);
     @Query("delete from categories where categoryName=:categoryName")

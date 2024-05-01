@@ -21,7 +21,7 @@ public abstract class EventManagerDatabase extends RoomDatabase{
     static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
     private static volatile EventManagerDatabase INSTANCE;
 
-    static EventManagerDatabase getDatabase (final Context context){
+    public static EventManagerDatabase getDatabase (final Context context){
         if(INSTANCE == null){
             synchronized (EventManagerDatabase.class){
                 if(INSTANCE == null){
@@ -30,7 +30,6 @@ public abstract class EventManagerDatabase extends RoomDatabase{
                 }
             }
         }
-
 
         return INSTANCE;
     }

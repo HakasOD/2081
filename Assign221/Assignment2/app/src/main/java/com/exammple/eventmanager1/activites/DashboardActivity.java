@@ -3,6 +3,8 @@ package com.exammple.eventmanager1.activites;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,14 +23,16 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.exammple.eventmanager1.R;
-import com.exammple.eventmanager1.provider.Category;
 import com.exammple.eventmanager1.provider.Event;
 import com.exammple.eventmanager1.provider.EventManagerViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
-import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DashboardActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
@@ -38,6 +42,7 @@ public class DashboardActivity extends AppCompatActivity {
     private EditText editTextEventId, editTextCategoryId, editTextEventName, editTextTicketsAvailable;
     private Switch switchIsActive;
     EventManagerViewModel eventManagerViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +84,7 @@ public class DashboardActivity extends AppCompatActivity {
         cardView.addView(cardLayout);
 
         eventManagerViewModel = new ViewModelProvider(this).get(EventManagerViewModel.class);
+
     }
 
     @Override
@@ -180,28 +186,45 @@ public class DashboardActivity extends AppCompatActivity {
 
             Event event = new Event(eventId, categoryId, eventName, ticketsAvailable, isActive);
             eventManagerViewModel.insertEvent(event);
+
+            Toast.makeText(this, "Event added",
+                    Toast.LENGTH_SHORT).show();
         }
 
         return true;
     }
 
     private boolean validEventFields(String categoryId, String eventName, int ticketsAvailable) {
-        //Get category id from database
-
-
-        boolean existingCategoryId = false;
+        AtomicBoolean existingCategoryId = new AtomicBoolean(false);
         boolean validName = false;
         boolean validTicketsAvailable = false;
 
-        //todo validate with categoryId
-//        // Entered categoryId must match an existing one
-//        for (Category category : db) {
-//            if (category.getCategoryId().equals(categoryId)) {
-//                existingCategoryId = true;
-//            }
-//        }
-        existingCategoryId = true;
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        Handler uiHandler = new Handler(Looper.getMainLooper());
+        CountDownLatch latch = new CountDownLatch(1);
 
+
+        executorService.execute(() -> {
+            existingCategoryId.set(eventManagerViewModel.categoryIdExists(categoryId));
+
+            latch.countDown();
+        });
+
+        try {
+            // Wait for the background task to complete
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        if(!existingCategoryId.get()){
+            uiHandler.post(() -> {
+                Toast.makeText(this, "Category does not exist",
+                        Toast.LENGTH_SHORT).show();
+            });
+
+            return false;
+        }
         if (isValidEventName(eventName))
         {
             validName = true;
@@ -218,10 +241,6 @@ public class DashboardActivity extends AppCompatActivity {
         } else if (!validTicketsAvailable) {
             Toast.makeText(this, "Invalid tickets available",
                     Toast.LENGTH_SHORT).show();
-        } else if(!existingCategoryId) {
-            Toast.makeText(this, "Category does not exist",
-                    Toast.LENGTH_SHORT).show();
-            return false;
         }
 
         return true;
