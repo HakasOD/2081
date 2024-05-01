@@ -8,9 +8,12 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "categories")
 public class Category {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "categoryId")
     @NonNull
+    private int id;
+
+    @ColumnInfo(name = "categoryId")
     private String categoryId;
     @ColumnInfo(name = "categoryName")
     private String name;
@@ -19,19 +22,26 @@ public class Category {
     @ColumnInfo(name = "isActive")
     private boolean isActive;
 
-    public Category(@NonNull String categoryId, String name, int eventCount, boolean isActive) {
+    public Category(String categoryId, String name, int eventCount, boolean isActive) {
         this.categoryId = categoryId;
         this.name = name;
         this.eventCount = eventCount;
         this.isActive = isActive;
     }
 
-    @NonNull
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(@NonNull String categoryId) {
+    public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
     }
 

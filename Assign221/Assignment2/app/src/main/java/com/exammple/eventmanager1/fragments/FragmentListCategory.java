@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.exammple.eventmanager1.provider.EventManagerViewModel;
 import com.exammple.eventmanager1.recycleradapters.CategoryRecyclerAdapter;
 import com.exammple.eventmanager1.provider.Category;
 import com.exammple.eventmanager1.appmanagement.DatabaseManagement;
@@ -34,10 +36,11 @@ public class FragmentListCategory extends Fragment {
 
     private String mParam1;
     private String mParam2;
-    ArrayList<Category> db;
+    private EventManagerViewModel eventManagerViewModel;
     CategoryRecyclerAdapter categoryRecyclerAdapter;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
+
 
 
 
@@ -117,9 +120,9 @@ public class FragmentListCategory extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        db = DatabaseManagement.getCategoryDatabaseFromSharedPreferences(getContext());
         // Inflate the layout
         View view = inflater.inflate(R.layout.fragment_list_category, container, false);
+
 
         //Set adapter with recyclerview
         recyclerView = view.findViewById(R.id.rvCategory);
@@ -131,6 +134,11 @@ public class FragmentListCategory extends Fragment {
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
+        eventManagerViewModel = new ViewModelProvider(this).get(EventManagerViewModel.class);
+        eventManagerViewModel.getAllCategories().observe(getViewLifecycleOwner(), newData -> {
+            categoryRecyclerAdapter.setDb((ArrayList<Category>) newData);
+            categoryRecyclerAdapter.notifyDataSetChanged();
+        });
 
         return view;
     }
