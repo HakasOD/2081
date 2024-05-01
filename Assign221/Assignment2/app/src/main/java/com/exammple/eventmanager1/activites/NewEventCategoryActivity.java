@@ -9,11 +9,13 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.exammple.eventmanager1.appmanagement.DatabaseManagement;
 import com.exammple.eventmanager1.appmanagement.KeyStore;
 import com.exammple.eventmanager1.R;
 import com.exammple.eventmanager1.provider.Category;
+import com.exammple.eventmanager1.provider.EventManagerViewModel;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -22,6 +24,7 @@ public class NewEventCategoryActivity extends AppCompatActivity {
     EditText editTextCategoryId;
     EditText editTextCategoryName;
     EditText editTextEventCount;
+    private EventManagerViewModel eventManagerViewModel;
     Switch switchIsActive;
 
     @Override
@@ -33,6 +36,9 @@ public class NewEventCategoryActivity extends AppCompatActivity {
         editTextCategoryName = findViewById(R.id.editTextCategoryName);
         editTextEventCount = findViewById(R.id.editTextEventCount);
         switchIsActive = findViewById(R.id.switchIsActive);
+
+        eventManagerViewModel = new ViewModelProvider(this).get(EventManagerViewModel.class);
+
     }
 
     public void onSaveEventCategoryButtonClick(View view) {
@@ -53,10 +59,7 @@ public class NewEventCategoryActivity extends AppCompatActivity {
 
             //Save category to database
             Category category = new Category(categoryId, categoryNameString, eventCountInt, isActive);
-            ArrayList<Category> db =
-                    DatabaseManagement.getCategoryDatabaseFromSharedPreferences(this);
-            db.add(category);
-            DatabaseManagement.saveCategoryDatabaseToSharedPreferences(this, db);
+            eventManagerViewModel.insert(category);
 
             Toast.makeText(this, "Category " + categoryId + " successfully saved", Toast.LENGTH_SHORT).show();
 
@@ -88,17 +91,6 @@ public class NewEventCategoryActivity extends AppCompatActivity {
     }
 
 
-    private void saveCategoryToSharedPreferences(String categoryId, String name, int eventCount, boolean isActive){
-
-        SharedPreferences sharedPreferences = getSharedPreferences(KeyStore.EVENT_CATEGORY_FILE, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        editor.putString(KeyStore.CATEGORY_ID_KEY, categoryId);
-        editor.putString(KeyStore.CATEGORY_NAME_KEY, name);
-        editor.putInt(KeyStore.EVENT_COUNT_KEY, eventCount);
-        editor.putBoolean(KeyStore.IS_ACTIVE_KEY, isActive);
-        editor.apply();
-    }
 
     private boolean isValidCategoryFields(String categoryName, String eventCount)
     {

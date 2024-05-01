@@ -68,44 +68,44 @@ public class FragmentListCategory extends Fragment {
     /**
      * Used to upload a single category to the database
      */
-    public void updateCategoryToDatabase(){
-        // Get saved fields
-        SharedPreferences sharedPreferences = getContext().
-                getSharedPreferences(KeyStore.EVENT_CATEGORY_FILE,MODE_PRIVATE);
-        String categoryId = sharedPreferences.getString(KeyStore.CATEGORY_ID_KEY, "");
-        String name = sharedPreferences.getString(KeyStore.CATEGORY_NAME_KEY, "");
-        int eventCount = sharedPreferences.getInt(KeyStore.EVENT_COUNT_KEY, 0);
-        boolean isActive = sharedPreferences.getBoolean(KeyStore.IS_ACTIVE_KEY, false);
-
-        // Clear temporary shared preferences to stop refresh
-        // button repeatedly uploading same category
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear();
-        editor.apply();
-
-        // Upload Category to database
-        if(!name.isEmpty()) {   // Only if there is data there
-            Category category = new Category(categoryId, name, eventCount, isActive);
-            db = DatabaseManagement.getCategoryDatabaseFromSharedPreferences(getContext());
-            db.add(category);
-            categoryRecyclerAdapter.setDb(db);
-            categoryRecyclerAdapter.notifyDataSetChanged();
-
-            DatabaseManagement.saveCategoryDatabaseToSharedPreferences(getContext(), db);
-        }
-    }
+//    public void updateCategoryToDatabase(){
+//        // Get saved fields
+//        SharedPreferences sharedPreferences = getContext().
+//                getSharedPreferences(KeyStore.EVENT_CATEGORY_FILE,MODE_PRIVATE);
+//        String categoryId = sharedPreferences.getString(KeyStore.CATEGORY_ID_KEY, "");
+//        String name = sharedPreferences.getString(KeyStore.CATEGORY_NAME_KEY, "");
+//        int eventCount = sharedPreferences.getInt(KeyStore.EVENT_COUNT_KEY, 0);
+//        boolean isActive = sharedPreferences.getBoolean(KeyStore.IS_ACTIVE_KEY, false);
+//
+//        // Clear temporary shared preferences to stop refresh
+//        // button repeatedly uploading same category
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//        editor.clear();
+//        editor.apply();
+//
+//        // Upload Category to database
+//        if(!name.isEmpty()) {   // Only if there is data there
+//            Category category = new Category(categoryId, name, eventCount, isActive);
+//            db = DatabaseManagement.getCategoryDatabaseFromSharedPreferences(getContext());
+//            db.add(category);
+//            categoryRecyclerAdapter.setDb(db);
+//            categoryRecyclerAdapter.notifyDataSetChanged();
+//
+//            DatabaseManagement.saveCategoryDatabaseToSharedPreferences(getContext(), db);
+//        }
+//    }
 
     /**
      * Used to update the database so it can be displayed in recyclerview
      */
-    public void updateRecyclerView(){
-        db = DatabaseManagement.getCategoryDatabaseFromSharedPreferences(getContext());
-
-        // Update UI
-        categoryRecyclerAdapter.setDb(db);
-        categoryRecyclerAdapter.notifyDataSetChanged();
-
-    }
+//    public void updateRecyclerView(){
+//        db = DatabaseManagement.getCategoryDatabaseFromSharedPreferences(getContext());
+//
+//        // Update UI
+//        categoryRecyclerAdapter.setDb(db);
+//        categoryRecyclerAdapter.notifyDataSetChanged();
+//
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -128,7 +128,6 @@ public class FragmentListCategory extends Fragment {
         recyclerView = view.findViewById(R.id.rvCategory);
 
         categoryRecyclerAdapter = new CategoryRecyclerAdapter();
-        categoryRecyclerAdapter.setDb(db);
         recyclerView.setAdapter(categoryRecyclerAdapter);
 
         layoutManager = new LinearLayoutManager(getContext());

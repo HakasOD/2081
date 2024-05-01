@@ -93,27 +93,29 @@ public class DashboardActivity extends AppCompatActivity {
             return true;
         }
         else if (item.getItemId() == R.id.option_refresh) {
-            // Reload category list
-            FragmentListCategory fragment = (FragmentListCategory) getSupportFragmentManager()
-                    .findFragmentById(R.id.fragmentContainerDashboardListCategory);
-            if (fragment != null) {
-                fragment.updateCategoryToDatabase();
-            }
-            recreate();
+            //todo reimplement refresh button
+//            // Reload category list
+//            FragmentListCategory fragment = (FragmentListCategory) getSupportFragmentManager()
+//                    .findFragmentById(R.id.fragmentContainerDashboardListCategory);
+//            if (fragment != null) {
+//                fragment.updateCategoryToDatabase();
+//            }
+//            recreate();
         }
         else if (item.getItemId() == R.id.option_clear_event_form) {
             clearFields();
         }
         else if(item.getItemId() == R.id.option_delete_all_categories){
-            DatabaseManagement.clearCategoriesDatabase(this);
-
-            // Update category fragment UI
-            FragmentListCategory fragment = (FragmentListCategory) getSupportFragmentManager()
-                    .findFragmentById(R.id.fragmentContainerDashboardListCategory);
-
-            if (fragment != null){
-                fragment.updateRecyclerView();
-            }
+            //todo reimplement delete all categories
+//            DatabaseManagement.clearCategoriesDatabase(this);
+//
+//            // Update category fragment UI
+//            FragmentListCategory fragment = (FragmentListCategory) getSupportFragmentManager()
+//                    .findFragmentById(R.id.fragmentContainerDashboardListCategory);
+//
+//            if (fragment != null){
+//                fragment.updateRecyclerView();
+//            }
         }
         else if(item.getItemId() == R.id.option_delete_all_events){
             // Update event count in corresponding categories
@@ -133,13 +135,13 @@ public class DashboardActivity extends AppCompatActivity {
             }
             DatabaseManagement.clearEventDatabase(this);
 
-            // Update category fragment UI
-            FragmentListCategory fragment = (FragmentListCategory) getSupportFragmentManager()
-                    .findFragmentById(R.id.fragmentContainerDashboardListCategory);
-
-            if (fragment != null){
-                fragment.updateRecyclerView();
-            }
+//            // Update category fragment UI
+//            FragmentListCategory fragment = (FragmentListCategory) getSupportFragmentManager()
+//                    .findFragmentById(R.id.fragmentContainerDashboardListCategory);
+//
+//            if (fragment != null){
+//                fragment.updateRecyclerView();
+//            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -201,11 +203,11 @@ public class DashboardActivity extends AppCompatActivity {
                                     mostRecentSavedEvent.getCategoryId(), Snackbar.LENGTH_LONG)
                             .setAction("Undo", c -> undoSave(mostRecentSavedEvent)).show();
 
-                    // Refresh the category list fragment to reflect any changes
-                    FragmentListCategory categoryFragment = (FragmentListCategory) getSupportFragmentManager()
-                            .findFragmentById(R.id.fragmentContainerDashboardListCategory);
-
-                    categoryFragment.updateRecyclerView();
+//                    // Refresh the category list fragment to reflect any changes
+//                    FragmentListCategory categoryFragment = (FragmentListCategory) getSupportFragmentManager()
+//                            .findFragmentById(R.id.fragmentContainerDashboardListCategory);
+//
+////                    categoryFragment.updateRecyclerView();
                 }
             }
         });
@@ -307,10 +309,10 @@ public class DashboardActivity extends AppCompatActivity {
             }
         }
 
-        // Update ui
-        FragmentListCategory categoryFragment = (FragmentListCategory) getSupportFragmentManager()
-                .findFragmentById(R.id.fragmentContainerDashboardListCategory);
-        categoryFragment.updateRecyclerView();
+//        // Update ui
+//        FragmentListCategory categoryFragment = (FragmentListCategory) getSupportFragmentManager()
+//                .findFragmentById(R.id.fragmentContainerDashboardListCategory);
+//        categoryFragment.updateRecyclerView();
 
     }
 
